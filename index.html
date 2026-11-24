@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Manage a film and anime catalog, members, and watch history.">
-  <title>Film &amp; Anime Catalog</title>
+  <meta name="description" content="Quản lý danh mục phim, thành viên và lịch sử xem.">
+  <title>Danh mục phim và hoạt hình Nhật</title>
   <style>
     :root {
       color-scheme: dark;
@@ -99,7 +99,7 @@
     .metric dt { color: var(--muted); font-size: .875rem; }
     .metric dd { margin: .2rem 0 0; font-size: 1.65rem; font-weight: 700; }
     .chart ul { display: grid; gap: .5rem; padding: 0; margin: .9rem 0 0; list-style: none; }
-    .chart li { display: grid; grid-template-columns: 4.7rem minmax(0, 1fr) minmax(2rem, auto); gap: .6rem; align-items: center; font-size: .875rem; }
+    .chart li { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) minmax(2rem, auto); gap: .6rem; align-items: center; font-size: .875rem; }
     .chart li span:last-child { text-align: right; font-variant-numeric: tabular-nums; }
     .track { height: .65rem; background: #30394c; border-radius: 1rem; overflow: hidden; }
     .bar { display: block; height: 100%; background: var(--mint); border-radius: inherit; }
@@ -121,7 +121,7 @@
     .report-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: .65rem; margin-top: .4rem; }
     .wide { grid-column: 1 / -1; }
     .form-actions { display: flex; gap: .5rem; justify-content: end; margin-top: .85rem; }
-    #form-error { color: var(--pink); font-size: .875rem; }
+    .form-error { color: var(--pink); font-size: .875rem; }
     @media (max-width: 37rem) {
       main { width: calc(100% - 1.25rem); }
       header { padding-top: 1.2rem; }
@@ -134,128 +134,128 @@
 <body>
   <main>
     <header>
-      <h1>Film &amp; Anime Catalog</h1>
-      <button id="reset-data" type="button">Reset sample data</button>
+      <h1>Danh mục phim và hoạt hình Nhật</h1>
+      <button id="reset-data" type="button">Khôi phục dữ liệu mẫu</button>
     </header>
 
-    <nav aria-label="Catalog sections">
-      <button type="button" data-panel="titles" aria-controls="titles" aria-pressed="true">Titles</button>
-      <button type="button" data-panel="members" aria-controls="members" aria-pressed="false">Members</button>
-      <button type="button" data-panel="history" aria-controls="history" aria-pressed="false">Watch history</button>
-      <button type="button" data-panel="reports" aria-controls="reports" aria-pressed="false">Reports</button>
+    <nav aria-label="Các mục quản lý">
+      <button type="button" data-panel="titles" aria-controls="titles" aria-pressed="true">Phim</button>
+      <button type="button" data-panel="members" aria-controls="members" aria-pressed="false">Thành viên</button>
+      <button type="button" data-panel="history" aria-controls="history" aria-pressed="false">Lịch sử xem</button>
+      <button type="button" data-panel="reports" aria-controls="reports" aria-pressed="false">Báo cáo</button>
     </nav>
-    <p id="storage-notice" class="notice" role="status" hidden>Browser storage is unavailable. Changes will last until you close or reload the page.</p>
+    <p id="storage-notice" class="notice" role="status" hidden>Không lưu được dữ liệu trên trình duyệt. Các thay đổi sẽ mất khi tải lại hoặc đóng trang.</p>
     <p id="feedback" role="status"></p>
-    <noscript><p>Enable JavaScript to use the catalog.</p></noscript>
+    <noscript><p>Hãy bật JavaScript để dùng danh mục.</p></noscript>
 
     <section id="titles" aria-labelledby="titles-heading">
       <div class="section-heading">
-        <h2 id="titles-heading">Titles</h2>
-        <button class="primary" type="button" data-action="add" data-kind="titles">Add title</button>
+        <h2 id="titles-heading">Phim</h2>
+        <button class="primary" type="button" data-action="add" data-kind="titles">Thêm phim</button>
       </div>
       <form class="filters" id="title-filters">
-        <label class="search">Title or director
-          <input name="search" type="search" placeholder="Search titles" autocomplete="off">
+        <label class="search">Tên phim hoặc đạo diễn
+          <input name="search" type="search" placeholder="Tìm phim" autocomplete="off">
         </label>
-        <label>Category
-          <select name="category"><option value="">All titles</option><option>Film</option><option>Anime</option></select>
+        <label>Loại phim
+          <select name="category"><option value="">Tất cả</option><option value="Film">Phim điện ảnh</option><option value="Anime">Hoạt hình Nhật</option></select>
         </label>
-        <label>Genre
-          <select name="genre"><option value="">All genres</option></select>
+        <label>Thể loại
+          <select name="genre"><option value="">Tất cả thể loại</option></select>
         </label>
-        <label>Release date
+        <label>Ngày phát hành
           <input name="date" type="date">
         </label>
-        <label>Sort by
+        <label>Sắp xếp theo
           <select name="sort">
-            <option value="chart">Chart order</option>
-            <option value="newest">Newest first</option>
-            <option value="oldest">Oldest first</option>
-            <option value="name">Title A–Z</option>
-            <option value="score">Highest score</option>
+            <option value="chart">Thứ hạng</option>
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
+            <option value="name">Tên phim A–Z</option>
+            <option value="score">Điểm cao nhất</option>
           </select>
         </label>
-        <button type="reset">Clear filters</button>
+        <button type="reset">Xóa bộ lọc</button>
       </form>
       <p class="count" id="title-count" role="status"></p>
-      <div class="table-wrap" tabindex="0" role="region" aria-label="Titles table">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="Danh sách phim">
         <table>
-          <thead><tr><th scope="col">Rank</th><th scope="col">Title</th><th scope="col">Genre</th><th scope="col">Released</th><th scope="col">Runtime</th><th scope="col">Views / score</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead>
+          <thead><tr><th scope="col">Hạng</th><th scope="col">Tên phim</th><th scope="col">Thể loại</th><th scope="col">Ngày phát hành</th><th scope="col">Thời lượng</th><th scope="col">Lượt xem / điểm</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr></thead>
           <tbody id="title-rows"></tbody>
         </table>
-        <p class="empty" id="title-empty" hidden>No matching titles.</p>
+        <p class="empty" id="title-empty" hidden>Không tìm thấy phim phù hợp.</p>
       </div>
     </section>
 
     <section id="members" aria-labelledby="members-heading" hidden>
       <div class="section-heading">
-        <h2 id="members-heading">Members</h2>
-        <button class="primary" type="button" data-action="add" data-kind="members">Add member</button>
+        <h2 id="members-heading">Thành viên</h2>
+        <button class="primary" type="button" data-action="add" data-kind="members">Thêm thành viên</button>
       </div>
       <form class="filters" id="member-filters">
-        <label class="search">Name or email
-          <input name="search" type="search" placeholder="Search members" autocomplete="off">
+        <label class="search">Tên hoặc email
+          <input name="search" type="search" placeholder="Tìm thành viên" autocomplete="off">
         </label>
-        <label>Plan
-          <select name="plan"><option value="">All plans</option><option>Free</option><option>Monthly</option><option>Annual</option></select>
+        <label>Gói
+          <select name="plan"><option value="">Tất cả các gói</option><option value="Free">Miễn phí</option><option value="Monthly">Theo tháng</option><option value="Annual">Theo năm</option></select>
         </label>
-        <button type="reset">Clear filters</button>
+        <button type="reset">Xóa bộ lọc</button>
       </form>
       <p class="count" id="member-count" role="status"></p>
-      <div class="table-wrap" tabindex="0" role="region" aria-label="Members table">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="Danh sách thành viên">
         <table>
-          <thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Plan</th><th scope="col">Joined</th><th scope="col">Actions</th></tr></thead>
+          <thead><tr><th scope="col">Họ tên</th><th scope="col">Email</th><th scope="col">Gói</th><th scope="col">Ngày tham gia</th><th scope="col">Thao tác</th></tr></thead>
           <tbody id="member-rows"></tbody>
         </table>
-        <p class="empty" id="member-empty" hidden>No matching members.</p>
+        <p class="empty" id="member-empty" hidden>Không tìm thấy thành viên phù hợp.</p>
       </div>
     </section>
 
     <section id="history" aria-labelledby="history-heading" hidden>
       <div class="section-heading">
-        <h2 id="history-heading">Watch history</h2>
-        <button class="primary" type="button" data-action="add" data-kind="history">Log a view</button>
+        <h2 id="history-heading">Lịch sử xem</h2>
+        <button class="primary" type="button" data-action="add" data-kind="history">Ghi lượt xem</button>
       </div>
       <form class="filters" id="history-filters">
-        <label class="search">Title or member
-          <input name="search" type="search" placeholder="Search watch history" autocomplete="off">
+        <label class="search">Tên phim hoặc thành viên
+          <input name="search" type="search" placeholder="Tìm lượt xem" autocomplete="off">
         </label>
-        <label>Watched on
+        <label>Ngày xem
           <input name="date" type="date">
         </label>
-        <button type="reset">Clear filters</button>
+        <button type="reset">Xóa bộ lọc</button>
       </form>
       <p class="count" id="history-count" role="status"></p>
-      <div class="table-wrap" tabindex="0" role="region" aria-label="Watch history table">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="Bảng lịch sử xem">
         <table>
-          <thead><tr><th scope="col">Title</th><th scope="col">Member</th><th scope="col">Watched on</th><th scope="col">Time watched</th><th scope="col">Actions</th></tr></thead>
+          <thead><tr><th scope="col">Tên phim</th><th scope="col">Thành viên</th><th scope="col">Ngày xem</th><th scope="col">Thời gian xem</th><th scope="col">Thao tác</th></tr></thead>
           <tbody id="history-rows"></tbody>
         </table>
-        <p class="empty" id="history-empty" hidden>No views found.</p>
+        <p class="empty" id="history-empty" hidden>Không tìm thấy lượt xem.</p>
       </div>
     </section>
 
     <section id="reports" aria-labelledby="reports-heading" hidden>
       <div class="section-heading">
-        <h2 id="reports-heading">Reports</h2>
+        <h2 id="reports-heading">Báo cáo</h2>
         <div class="report-actions">
-          <button type="button" id="use-logged-numbers" hidden>Use logged data</button>
-          <button type="button" class="primary" id="edit-report">Edit numbers</button>
+          <button type="button" id="use-logged-numbers" hidden>Dùng số liệu gốc</button>
+          <button type="button" class="primary" id="edit-report">Sửa số liệu</button>
         </div>
       </div>
       <dl class="metrics">
-        <div class="metric"><dt>Total views</dt><dd id="total-views">0</dd></div>
-        <div class="metric"><dt>Unique viewers</dt><dd id="unique-viewers">0</dd></div>
-        <div class="metric"><dt>Watch time</dt><dd id="watch-time">0 min</dd></div>
-        <div class="metric"><dt>Paid subscribers</dt><dd id="paid-subs">0</dd></div>
+        <div class="metric"><dt>Tổng lượt xem</dt><dd id="total-views">0</dd></div>
+        <div class="metric"><dt>Số người xem</dt><dd id="unique-viewers">0</dd></div>
+        <div class="metric"><dt>Thời gian xem</dt><dd id="watch-time">0 min</dd></div>
+        <div class="metric"><dt>Thành viên trả phí</dt><dd id="paid-subs">0</dd></div>
       </dl>
       <div class="charts">
         <section class="chart" aria-labelledby="views-heading">
-          <h3 id="views-heading">Views in the last 7 days</h3>
+          <h3 id="views-heading">Lượt xem trong 7 ngày qua</h3>
           <ul id="view-chart"></ul>
         </section>
         <section class="chart" aria-labelledby="plans-heading">
-          <h3 id="plans-heading">Members by plan</h3>
+          <h3 id="plans-heading">Thành viên theo gói</h3>
           <ul id="plan-chart"></ul>
         </section>
       </div>
@@ -264,24 +264,35 @@
   </main>
 
   <dialog id="editor" aria-labelledby="editor-heading">
-    <form id="editor-form">
+    <form id="editor-form" novalidate>
       <h2 id="editor-heading"></h2>
       <div class="form-fields" id="form-fields"></div>
-      <p id="form-error" role="alert"></p>
+      <p class="form-error" id="form-error" role="alert"></p>
       <div class="form-actions">
-        <button type="button" id="cancel-edit">Cancel</button>
-        <button type="submit" class="primary" id="save-edit">Save</button>
+        <button type="button" id="cancel-edit">Hủy</button>
+        <button type="submit" class="primary" id="save-edit">Lưu</button>
       </div>
     </form>
   </dialog>
 
   <dialog id="report-editor" aria-labelledby="report-editor-heading">
-    <form id="report-form">
-      <h2 id="report-editor-heading">Edit report numbers</h2>
+    <form id="report-form" novalidate>
+      <h2 id="report-editor-heading">Sửa số liệu báo cáo</h2>
       <div id="report-fields"></div>
+      <p class="form-error" id="report-error" role="alert"></p>
       <div class="form-actions">
-        <button type="button" id="cancel-report">Cancel</button>
-        <button type="submit" class="primary">Save</button>
+        <button type="button" id="cancel-report">Hủy</button>
+        <button type="submit" class="primary">Lưu</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="confirm-dialog" aria-labelledby="confirm-message">
+    <form method="dialog">
+      <h2 id="confirm-message"></h2>
+      <div class="form-actions">
+        <button value="cancel" autofocus>Hủy</button>
+        <button value="apply" class="danger" id="confirm-apply"></button>
       </div>
     </form>
   </dialog>
@@ -289,46 +300,46 @@
   <script type="application/json" id="catalog-data">
 {
   "titles": [
-    {"id":"tt0111161","category":"Film","rank":1,"title":"The Shawshank Redemption","alternateTitle":null,"year":1994,"format":"Feature film","score":9.3,"sourceId":"tt0111161","director":"Frank Darabont","genre":"Drama","releaseDate":"1994-09-23","runtime":142,"status":"Available"},
-    {"id":"tt0068646","category":"Film","rank":2,"title":"The Godfather","alternateTitle":null,"year":1972,"format":"Feature film","score":9.2,"sourceId":"tt0068646","director":"Francis Ford Coppola","genre":"Crime","releaseDate":"1972-03-24","runtime":175,"status":"Available"},
-    {"id":"tt0468569","category":"Film","rank":3,"title":"The Dark Knight","alternateTitle":null,"year":2008,"format":"Feature film","score":9.1,"sourceId":"tt0468569","director":"Christopher Nolan","genre":"Action","releaseDate":"2008-07-18","runtime":152,"status":"Available"},
-    {"id":"tt0071562","category":"Film","rank":4,"title":"The Godfather Part II","alternateTitle":null,"year":1974,"format":"Feature film","score":9,"sourceId":"tt0071562","director":"Francis Ford Coppola","genre":"Crime","releaseDate":"1974-12-20","runtime":202,"status":"Available"},
-    {"id":"tt0167260","category":"Film","rank":5,"title":"The Lord of the Rings: The Return of the King","alternateTitle":null,"year":2003,"format":"Feature film","score":9,"sourceId":"tt0167260","director":"Peter Jackson","genre":"Fantasy","releaseDate":"2003-12-17","runtime":201,"status":"Available"},
-    {"id":"tt0050083","category":"Film","rank":6,"title":"12 Angry Men","alternateTitle":null,"year":1957,"format":"Feature film","score":9,"sourceId":"tt0050083","director":"Sidney Lumet","genre":"Drama","releaseDate":"1957-04-10","runtime":96,"status":"Available"},
-    {"id":"tt0108052","category":"Film","rank":7,"title":"Schindler's List","alternateTitle":null,"year":1993,"format":"Feature film","score":9,"sourceId":"tt0108052","director":"Steven Spielberg","genre":"Drama","releaseDate":"1993-12-15","runtime":196,"status":"Available"},
-    {"id":"tt0120737","category":"Film","rank":8,"title":"The Lord of the Rings: The Fellowship of the Ring","alternateTitle":null,"year":2001,"format":"Feature film","score":8.9,"sourceId":"tt0120737","director":"Peter Jackson","genre":"Fantasy","releaseDate":"2001-12-19","runtime":178,"status":"Available"},
-    {"id":"tt0110912","category":"Film","rank":9,"title":"Pulp Fiction","alternateTitle":null,"year":1994,"format":"Feature film","score":8.8,"sourceId":"tt0110912","director":"Quentin Tarantino","genre":"Crime","releaseDate":"1994-10-14","runtime":154,"status":"Available"},
-    {"id":"tt0167261","category":"Film","rank":10,"title":"The Lord of the Rings: The Two Towers","alternateTitle":null,"year":2002,"format":"Feature film","score":8.8,"sourceId":"tt0167261","director":"Peter Jackson","genre":"Fantasy","releaseDate":"2002-12-18","runtime":179,"status":"Available"},
-    {"id":"tt0060196","category":"Film","rank":11,"title":"The Good, the Bad and the Ugly","alternateTitle":null,"year":1966,"format":"Feature film","score":8.8,"sourceId":"tt0060196","director":"Sergio Leone","genre":"Western","releaseDate":"1966-12-23","runtime":178,"status":"Available"},
-    {"id":"tt0109830","category":"Film","rank":12,"title":"Forrest Gump","alternateTitle":null,"year":1994,"format":"Feature film","score":8.8,"sourceId":"tt0109830","director":"Robert Zemeckis","genre":"Drama","releaseDate":"1994-07-06","runtime":142,"status":"Available"},
-    {"id":"tt1375666","category":"Film","rank":13,"title":"Inception","alternateTitle":null,"year":2010,"format":"Feature film","score":8.8,"sourceId":"tt1375666","director":"Christopher Nolan","genre":"Sci-fi","releaseDate":"2010-07-16","runtime":148,"status":"Available"},
-    {"id":"tt0137523","category":"Film","rank":14,"title":"Fight Club","alternateTitle":null,"year":1999,"format":"Feature film","score":8.8,"sourceId":"tt0137523","director":"David Fincher","genre":"Drama","releaseDate":"1999-10-15","runtime":139,"status":"Available"},
-    {"id":"tt0080684","category":"Film","rank":15,"title":"Star Wars: Episode V - The Empire Strikes Back","alternateTitle":null,"year":1980,"format":"Feature film","score":8.7,"sourceId":"tt0080684","director":"Irvin Kershner","genre":"Sci-fi","releaseDate":"1980-05-21","runtime":124,"status":"Available"},
-    {"id":"tt0133093","category":"Film","rank":16,"title":"The Matrix","alternateTitle":null,"year":1999,"format":"Feature film","score":8.7,"sourceId":"tt0133093","director":"Lana and Lilly Wachowski","genre":"Sci-fi","releaseDate":"1999-03-31","runtime":136,"status":"Available"},
-    {"id":"tt0816692","category":"Film","rank":17,"title":"Interstellar","alternateTitle":null,"year":2014,"format":"Feature film","score":8.7,"sourceId":"tt0816692","director":"Christopher Nolan","genre":"Sci-fi","releaseDate":"2014-11-07","runtime":169,"status":"Available"},
-    {"id":"tt0099685","category":"Film","rank":18,"title":"GoodFellas","alternateTitle":null,"year":1990,"format":"Feature film","score":8.7,"sourceId":"tt0099685","director":"Martin Scorsese","genre":"Crime","releaseDate":"1990-09-19","runtime":145,"status":"Available"},
-    {"id":"tt0073486","category":"Film","rank":19,"title":"One Flew Over the Cuckoo's Nest","alternateTitle":null,"year":1975,"format":"Feature film","score":8.6,"sourceId":"tt0073486","director":"Miloš Forman","genre":"Drama","releaseDate":"1975-11-19","runtime":133,"status":"Available"},
-    {"id":"tt0114369","category":"Film","rank":20,"title":"Seven","alternateTitle":"Se7en","year":1995,"format":"Feature film","score":8.6,"sourceId":"tt0114369","director":"David Fincher","genre":"Thriller","releaseDate":"1995-09-22","runtime":127,"status":"Available"},
-    {"id":"52991","category":"Anime","rank":1,"title":"Frieren: Beyond Journey's End","alternateTitle":"Sousou no Frieren","year":2023,"format":"TV series","score":9.24,"sourceId":"52991","director":"Keiichirō Saitō","genre":"Fantasy","releaseDate":"2023-09-29","runtime":null,"status":"Available"},
-    {"id":"5114","category":"Anime","rank":2,"title":"Fullmetal Alchemist: Brotherhood","alternateTitle":null,"year":2009,"format":"TV series","score":9.11,"sourceId":"5114","director":"Yasuhiro Irie","genre":"Fantasy","releaseDate":"2009-04-05","runtime":null,"status":"Available"},
-    {"id":"9253","category":"Anime","rank":3,"title":"Steins;Gate","alternateTitle":null,"year":2011,"format":"TV series","score":9.07,"sourceId":"9253","director":"Hiroshi Hamasaki, Takuya Satō","genre":"Sci-fi","releaseDate":"2011-04-06","runtime":null,"status":"Available"},
-    {"id":"38524","category":"Anime","rank":4,"title":"Attack on Titan Season 3 Part 2","alternateTitle":"Shingeki no Kyojin Season 3 Part 2","year":2019,"format":"TV series","score":9.06,"sourceId":"38524","director":"Tetsurō Araki, Masashi Koizuka","genre":"Action","releaseDate":"2019-04-29","runtime":null,"status":"Available"},
-    {"id":"57555","category":"Anime","rank":5,"title":"Chainsaw Man – The Movie: Reze Arc","alternateTitle":"Chainsaw Man Movie: Reze-hen","year":2025,"format":"Anime film","score":9.05,"sourceId":"57555","director":"Tatsuya Yoshihara","genre":"Action","releaseDate":"2025-09-19","runtime":100,"status":"Available"},
-    {"id":"39486","category":"Anime","rank":6,"title":"Gintama: The Final","alternateTitle":"Gintama: The Very Final","year":2021,"format":"Anime film","score":9.05,"sourceId":"39486","director":"Chizuru Miyawaki","genre":"Comedy","releaseDate":"2021-01-08","runtime":104,"status":"Available"},
-    {"id":"28977","category":"Anime","rank":7,"title":"Gintama°","alternateTitle":null,"year":2015,"format":"TV series","score":9.05,"sourceId":"28977","director":"Chizuru Miyawaki","genre":"Comedy","releaseDate":"2015-04-08","runtime":null,"status":"Available"},
-    {"id":"61316","category":"Anime","rank":8,"title":"Re:ZERO -Starting Life in Another World- Season 4","alternateTitle":"Re:Zero kara Hajimeru Isekai Seikatsu 4th Season","year":2026,"format":"TV series","score":9.05,"sourceId":"61316","director":"Masahiro Shinohara","genre":"Fantasy","releaseDate":null,"runtime":null,"status":"Available"},
-    {"id":"11061","category":"Anime","rank":9,"title":"Hunter x Hunter (2011)","alternateTitle":null,"year":2011,"format":"TV series","score":9.03,"sourceId":"11061","director":"Hiroshi Kōjina","genre":"Adventure","releaseDate":"2011-10-02","runtime":null,"status":"Available"},
-    {"id":"61469","category":"Anime","rank":10,"title":"Steel Ball Run: JoJo's Bizarre Adventure","alternateTitle":"Steel Ball Run: JoJo no Kimyou na Bouken","year":2026,"format":"Web series","score":9.03,"sourceId":"61469","director":null,"genre":"Adventure","releaseDate":null,"runtime":null,"status":"Available"},
-    {"id":"820","category":"Anime","rank":11,"title":"Legend of the Galactic Heroes","alternateTitle":"Ginga Eiyuu Densetsu","year":1988,"format":"OVA","score":9.02,"sourceId":"820","director":"Noboru Ishiguro","genre":"Sci-fi","releaseDate":null,"runtime":null,"status":"Available"},
-    {"id":"9969","category":"Anime","rank":12,"title":"Gintama'","alternateTitle":null,"year":2011,"format":"TV series","score":9.02,"sourceId":"9969","director":"Yōichi Fujita","genre":"Comedy","releaseDate":"2011-04-04","runtime":null,"status":"Available"},
-    {"id":"15417","category":"Anime","rank":13,"title":"Gintama': Enchousen","alternateTitle":null,"year":2012,"format":"TV series","score":9.02,"sourceId":"15417","director":"Yōichi Fujita","genre":"Comedy","releaseDate":"2012-10-04","runtime":null,"status":"Available"},
-    {"id":"60022","category":"Anime","rank":14,"title":"One Piece Fan Letter","alternateTitle":null,"year":2024,"format":"TV special","score":8.99,"sourceId":"60022","director":"Megumi Ishitani","genre":"Adventure","releaseDate":"2024-10-20","runtime":25,"status":"Available"},
-    {"id":"34096","category":"Anime","rank":15,"title":"Gintama.","alternateTitle":null,"year":2017,"format":"TV series","score":8.98,"sourceId":"34096","director":"Chizuru Miyawaki","genre":"Comedy","releaseDate":"2017-01-09","runtime":null,"status":"Available"},
-    {"id":"41467","category":"Anime","rank":16,"title":"Bleach: Thousand-Year Blood War","alternateTitle":"Bleach: Sennen Kessen-hen","year":2022,"format":"TV series","score":8.97,"sourceId":"41467","director":"Tomohisa Taguchi","genre":"Action","releaseDate":"2022-10-11","runtime":null,"status":"Available"},
-    {"id":"43608","category":"Anime","rank":17,"title":"Kaguya-sama: Love Is War – Ultra Romantic","alternateTitle":"Kaguya-sama wa Kokurasetai: Ultra Romantic","year":2022,"format":"TV series","score":8.94,"sourceId":"43608","director":"Mamoru Hatakeyama","genre":"Romance","releaseDate":"2022-04-09","runtime":null,"status":"Available"},
-    {"id":"4181","category":"Anime","rank":18,"title":"Clannad: After Story","alternateTitle":null,"year":2008,"format":"TV series","score":8.93,"sourceId":"4181","director":"Tatsuya Ishihara","genre":"Drama","releaseDate":"2008-10-03","runtime":null,"status":"Available"},
-    {"id":"918","category":"Anime","rank":19,"title":"Gintama","alternateTitle":null,"year":2006,"format":"TV series","score":8.93,"sourceId":"918","director":"Shinji Takamatsu, Yōichi Fujita","genre":"Comedy","releaseDate":"2006-04-04","runtime":null,"status":"Available"},
-    {"id":"28851","category":"Anime","rank":20,"title":"A Silent Voice","alternateTitle":"Koe no Katachi","year":2016,"format":"Anime film","score":8.93,"sourceId":"28851","director":"Naoko Yamada","genre":"Drama","releaseDate":"2016-09-17","runtime":130,"status":"Available"}
+    {"id":"tt0111161","category":"Film","rank":1,"title":"The Shawshank Redemption","alternateTitle":null,"year":1994,"format":"Feature film","score":9.3,"sourceId":"tt0111161","director":"Frank Darabont","genre":"Drama","releaseDate":"1994-09-23","runtime":142,"status":"Available","vietnameseTitle":"Nhà tù Shawshank"},
+    {"id":"tt0068646","category":"Film","rank":2,"title":"The Godfather","alternateTitle":null,"year":1972,"format":"Feature film","score":9.2,"sourceId":"tt0068646","director":"Francis Ford Coppola","genre":"Crime","releaseDate":"1972-03-24","runtime":175,"status":"Available","vietnameseTitle":"Bố già"},
+    {"id":"tt0468569","category":"Film","rank":3,"title":"The Dark Knight","alternateTitle":null,"year":2008,"format":"Feature film","score":9.1,"sourceId":"tt0468569","director":"Christopher Nolan","genre":"Action","releaseDate":"2008-07-18","runtime":152,"status":"Available","vietnameseTitle":"Kỵ sĩ bóng đêm"},
+    {"id":"tt0071562","category":"Film","rank":4,"title":"The Godfather Part II","alternateTitle":null,"year":1974,"format":"Feature film","score":9,"sourceId":"tt0071562","director":"Francis Ford Coppola","genre":"Crime","releaseDate":"1974-12-20","runtime":202,"status":"Available","vietnameseTitle":"Bố già phần II"},
+    {"id":"tt0167260","category":"Film","rank":5,"title":"The Lord of the Rings: The Return of the King","alternateTitle":null,"year":2003,"format":"Feature film","score":9,"sourceId":"tt0167260","director":"Peter Jackson","genre":"Fantasy","releaseDate":"2003-12-17","runtime":201,"status":"Available","vietnameseTitle":"Chúa tể những chiếc nhẫn: Sự trở về của nhà vua"},
+    {"id":"tt0050083","category":"Film","rank":6,"title":"12 Angry Men","alternateTitle":null,"year":1957,"format":"Feature film","score":9,"sourceId":"tt0050083","director":"Sidney Lumet","genre":"Drama","releaseDate":"1957-04-10","runtime":96,"status":"Available","vietnameseTitle":"12 người đàn ông giận dữ"},
+    {"id":"tt0108052","category":"Film","rank":7,"title":"Schindler's List","alternateTitle":null,"year":1993,"format":"Feature film","score":9,"sourceId":"tt0108052","director":"Steven Spielberg","genre":"Drama","releaseDate":"1993-12-15","runtime":196,"status":"Available","vietnameseTitle":"Bản danh sách của Schindler"},
+    {"id":"tt0120737","category":"Film","rank":8,"title":"The Lord of the Rings: The Fellowship of the Ring","alternateTitle":null,"year":2001,"format":"Feature film","score":8.9,"sourceId":"tt0120737","director":"Peter Jackson","genre":"Fantasy","releaseDate":"2001-12-19","runtime":178,"status":"Available","vietnameseTitle":"Chúa tể những chiếc nhẫn: Hiệp hội nhẫn thần"},
+    {"id":"tt0110912","category":"Film","rank":9,"title":"Pulp Fiction","alternateTitle":null,"year":1994,"format":"Feature film","score":8.8,"sourceId":"tt0110912","director":"Quentin Tarantino","genre":"Crime","releaseDate":"1994-10-14","runtime":154,"status":"Available","vietnameseTitle":"Chuyện tầm phào"},
+    {"id":"tt0167261","category":"Film","rank":10,"title":"The Lord of the Rings: The Two Towers","alternateTitle":null,"year":2002,"format":"Feature film","score":8.8,"sourceId":"tt0167261","director":"Peter Jackson","genre":"Fantasy","releaseDate":"2002-12-18","runtime":179,"status":"Available","vietnameseTitle":"Chúa tể những chiếc nhẫn: Hai tòa tháp"},
+    {"id":"tt0060196","category":"Film","rank":11,"title":"The Good, the Bad and the Ugly","alternateTitle":null,"year":1966,"format":"Feature film","score":8.8,"sourceId":"tt0060196","director":"Sergio Leone","genre":"Western","releaseDate":"1966-12-23","runtime":178,"status":"Available","vietnameseTitle":"Thiện, ác, tà"},
+    {"id":"tt0109830","category":"Film","rank":12,"title":"Forrest Gump","alternateTitle":null,"year":1994,"format":"Feature film","score":8.8,"sourceId":"tt0109830","director":"Robert Zemeckis","genre":"Drama","releaseDate":"1994-07-06","runtime":142,"status":"Available","vietnameseTitle":"Cuộc đời Forrest Gump"},
+    {"id":"tt1375666","category":"Film","rank":13,"title":"Inception","alternateTitle":null,"year":2010,"format":"Feature film","score":8.8,"sourceId":"tt1375666","director":"Christopher Nolan","genre":"Sci-fi","releaseDate":"2010-07-16","runtime":148,"status":"Available","vietnameseTitle":"Kẻ đánh cắp giấc mơ"},
+    {"id":"tt0137523","category":"Film","rank":14,"title":"Fight Club","alternateTitle":null,"year":1999,"format":"Feature film","score":8.8,"sourceId":"tt0137523","director":"David Fincher","genre":"Drama","releaseDate":"1999-10-15","runtime":139,"status":"Available","vietnameseTitle":"Sàn đấu sinh tử"},
+    {"id":"tt0080684","category":"Film","rank":15,"title":"Star Wars: Episode V - The Empire Strikes Back","alternateTitle":null,"year":1980,"format":"Feature film","score":8.7,"sourceId":"tt0080684","director":"Irvin Kershner","genre":"Sci-fi","releaseDate":"1980-05-21","runtime":124,"status":"Available","vietnameseTitle":"Chiến tranh giữa các vì sao: Tập V – Đế chế phản công"},
+    {"id":"tt0133093","category":"Film","rank":16,"title":"The Matrix","alternateTitle":null,"year":1999,"format":"Feature film","score":8.7,"sourceId":"tt0133093","director":"Lana and Lilly Wachowski","genre":"Sci-fi","releaseDate":"1999-03-31","runtime":136,"status":"Available","vietnameseTitle":"Ma trận"},
+    {"id":"tt0816692","category":"Film","rank":17,"title":"Interstellar","alternateTitle":null,"year":2014,"format":"Feature film","score":8.7,"sourceId":"tt0816692","director":"Christopher Nolan","genre":"Sci-fi","releaseDate":"2014-11-07","runtime":169,"status":"Available","vietnameseTitle":"Hố đen tử thần"},
+    {"id":"tt0099685","category":"Film","rank":18,"title":"GoodFellas","alternateTitle":null,"year":1990,"format":"Feature film","score":8.7,"sourceId":"tt0099685","director":"Martin Scorsese","genre":"Crime","releaseDate":"1990-09-19","runtime":145,"status":"Available","vietnameseTitle":"Chiến hữu"},
+    {"id":"tt0073486","category":"Film","rank":19,"title":"One Flew Over the Cuckoo's Nest","alternateTitle":null,"year":1975,"format":"Feature film","score":8.6,"sourceId":"tt0073486","director":"Miloš Forman","genre":"Drama","releaseDate":"1975-11-19","runtime":133,"status":"Available","vietnameseTitle":"Bay trên tổ chim cúc cu"},
+    {"id":"tt0114369","category":"Film","rank":20,"title":"Seven","alternateTitle":"Se7en","year":1995,"format":"Feature film","score":8.6,"sourceId":"tt0114369","director":"David Fincher","genre":"Thriller","releaseDate":"1995-09-22","runtime":127,"status":"Available","vietnameseTitle":"Bảy tội lỗi"},
+    {"id":"52991","category":"Anime","rank":1,"title":"Frieren: Beyond Journey's End","alternateTitle":"Sousou no Frieren","year":2023,"format":"TV series","score":9.24,"sourceId":"52991","director":"Keiichirō Saitō","genre":"Fantasy","releaseDate":"2023-09-29","runtime":null,"status":"Available","vietnameseTitle":"Frieren: Pháp sư tiễn táng"},
+    {"id":"5114","category":"Anime","rank":2,"title":"Fullmetal Alchemist: Brotherhood","alternateTitle":null,"year":2009,"format":"TV series","score":9.11,"sourceId":"5114","director":"Yasuhiro Irie","genre":"Fantasy","releaseDate":"2009-04-05","runtime":null,"status":"Available","vietnameseTitle":"Giả kim thuật sư: Tình anh em"},
+    {"id":"9253","category":"Anime","rank":3,"title":"Steins;Gate","alternateTitle":null,"year":2011,"format":"TV series","score":9.07,"sourceId":"9253","director":"Hiroshi Hamasaki, Takuya Satō","genre":"Sci-fi","releaseDate":"2011-04-06","runtime":null,"status":"Available","vietnameseTitle":"Steins;Gate: Cánh cổng thời gian"},
+    {"id":"38524","category":"Anime","rank":4,"title":"Attack on Titan Season 3 Part 2","alternateTitle":"Shingeki no Kyojin Season 3 Part 2","year":2019,"format":"TV series","score":9.06,"sourceId":"38524","director":"Tetsurō Araki, Masashi Koizuka","genre":"Action","releaseDate":"2019-04-29","runtime":null,"status":"Available","vietnameseTitle":"Đại chiến Titan: Mùa 3, phần 2"},
+    {"id":"57555","category":"Anime","rank":5,"title":"Chainsaw Man – The Movie: Reze Arc","alternateTitle":"Chainsaw Man Movie: Reze-hen","year":2025,"format":"Anime film","score":9.05,"sourceId":"57555","director":"Tatsuya Yoshihara","genre":"Action","releaseDate":"2025-09-19","runtime":100,"status":"Available","vietnameseTitle":"Chainsaw Man: Chương Reze"},
+    {"id":"39486","category":"Anime","rank":6,"title":"Gintama: The Final","alternateTitle":"Gintama: The Very Final","year":2021,"format":"Anime film","score":9.05,"sourceId":"39486","director":"Chizuru Miyawaki","genre":"Comedy","releaseDate":"2021-01-08","runtime":104,"status":"Available","vietnameseTitle":"Gintama: Hồi kết"},
+    {"id":"28977","category":"Anime","rank":7,"title":"Gintama°","alternateTitle":null,"year":2015,"format":"TV series","score":9.05,"sourceId":"28977","director":"Chizuru Miyawaki","genre":"Comedy","releaseDate":"2015-04-08","runtime":null,"status":"Available","vietnameseTitle":"Gintama° (2015)"},
+    {"id":"61316","category":"Anime","rank":8,"title":"Re:ZERO -Starting Life in Another World- Season 4","alternateTitle":"Re:Zero kara Hajimeru Isekai Seikatsu 4th Season","year":2026,"format":"TV series","score":9.05,"sourceId":"61316","director":"Masahiro Shinohara","genre":"Fantasy","releaseDate":null,"runtime":null,"status":"Available","vietnameseTitle":"Re:Zero: Bắt đầu lại ở thế giới khác, mùa 4"},
+    {"id":"11061","category":"Anime","rank":9,"title":"Hunter x Hunter (2011)","alternateTitle":null,"year":2011,"format":"TV series","score":9.03,"sourceId":"11061","director":"Hiroshi Kōjina","genre":"Adventure","releaseDate":"2011-10-02","runtime":null,"status":"Available","vietnameseTitle":"Thợ săn x Thợ săn (2011)"},
+    {"id":"61469","category":"Anime","rank":10,"title":"Steel Ball Run: JoJo's Bizarre Adventure","alternateTitle":"Steel Ball Run: JoJo no Kimyou na Bouken","year":2026,"format":"Web series","score":9.03,"sourceId":"61469","director":null,"genre":"Adventure","releaseDate":null,"runtime":null,"status":"Available","vietnameseTitle":"Cuộc phiêu lưu kỳ bí của JoJo: Cuộc đua ngựa thép"},
+    {"id":"820","category":"Anime","rank":11,"title":"Legend of the Galactic Heroes","alternateTitle":"Ginga Eiyuu Densetsu","year":1988,"format":"OVA","score":9.02,"sourceId":"820","director":"Noboru Ishiguro","genre":"Sci-fi","releaseDate":null,"runtime":null,"status":"Available","vietnameseTitle":"Huyền thoại các anh hùng ngân hà"},
+    {"id":"9969","category":"Anime","rank":12,"title":"Gintama'","alternateTitle":null,"year":2011,"format":"TV series","score":9.02,"sourceId":"9969","director":"Yōichi Fujita","genre":"Comedy","releaseDate":"2011-04-04","runtime":null,"status":"Available","vietnameseTitle":"Gintama: Phần tiếp nối (2011)"},
+    {"id":"15417","category":"Anime","rank":13,"title":"Gintama': Enchousen","alternateTitle":null,"year":2012,"format":"TV series","score":9.02,"sourceId":"15417","director":"Yōichi Fujita","genre":"Comedy","releaseDate":"2012-10-04","runtime":null,"status":"Available","vietnameseTitle":"Gintama: Phần mở rộng (2012)"},
+    {"id":"60022","category":"Anime","rank":14,"title":"One Piece Fan Letter","alternateTitle":null,"year":2024,"format":"TV special","score":8.99,"sourceId":"60022","director":"Megumi Ishitani","genre":"Adventure","releaseDate":"2024-10-20","runtime":25,"status":"Available","vietnameseTitle":"Đảo hải tặc: Lá thư của người hâm mộ"},
+    {"id":"34096","category":"Anime","rank":15,"title":"Gintama.","alternateTitle":null,"year":2017,"format":"TV series","score":8.98,"sourceId":"34096","director":"Chizuru Miyawaki","genre":"Comedy","releaseDate":"2017-01-09","runtime":null,"status":"Available","vietnameseTitle":"Gintama. (2017)"},
+    {"id":"41467","category":"Anime","rank":16,"title":"Bleach: Thousand-Year Blood War","alternateTitle":"Bleach: Sennen Kessen-hen","year":2022,"format":"TV series","score":8.97,"sourceId":"41467","director":"Tomohisa Taguchi","genre":"Action","releaseDate":"2022-10-11","runtime":null,"status":"Available","vietnameseTitle":"Bleach: Huyết chiến ngàn năm"},
+    {"id":"43608","category":"Anime","rank":17,"title":"Kaguya-sama: Love Is War – Ultra Romantic","alternateTitle":"Kaguya-sama wa Kokurasetai: Ultra Romantic","year":2022,"format":"TV series","score":8.94,"sourceId":"43608","director":"Mamoru Hatakeyama","genre":"Romance","releaseDate":"2022-04-09","runtime":null,"status":"Available","vietnameseTitle":"Kaguya-sama: Cuộc chiến tỏ tình, mùa 3"},
+    {"id":"4181","category":"Anime","rank":18,"title":"Clannad: After Story","alternateTitle":null,"year":2008,"format":"TV series","score":8.93,"sourceId":"4181","director":"Tatsuya Ishihara","genre":"Drama","releaseDate":"2008-10-03","runtime":null,"status":"Available","vietnameseTitle":"Clannad: Câu chuyện tiếp theo"},
+    {"id":"918","category":"Anime","rank":19,"title":"Gintama","alternateTitle":null,"year":2006,"format":"TV series","score":8.93,"sourceId":"918","director":"Shinji Takamatsu, Yōichi Fujita","genre":"Comedy","releaseDate":"2006-04-04","runtime":null,"status":"Available","vietnameseTitle":"Gintama (2006)"},
+    {"id":"28851","category":"Anime","rank":20,"title":"A Silent Voice","alternateTitle":"Koe no Katachi","year":2016,"format":"Anime film","score":8.93,"sourceId":"28851","director":"Naoko Yamada","genre":"Drama","releaseDate":"2016-09-17","runtime":130,"status":"Available","vietnameseTitle":"Dáng hình thanh âm"}
   ],
   "members": [
     {"id":"m1","name":"Alex Rivera","email":"alex@example.com","plan":"Monthly","daysAgo":45},
@@ -355,14 +366,31 @@
     const storageKey = 'film-anime-catalog-v1';
     const plans = ['Free', 'Monthly', 'Annual'];
     const statuses = ['Available', 'Coming soon', 'Archived'];
-    const dateFormat = new Intl.DateTimeFormat('en', { dateStyle: 'medium' });
-    const shortDate = new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric' });
-    const numbers = new Intl.NumberFormat('en');
+    const labels = {
+      Film: 'Phim điện ảnh', Anime: 'Hoạt hình Nhật',
+      Free: 'Miễn phí', Monthly: 'Theo tháng', Annual: 'Theo năm',
+      Available: 'Đang chiếu', 'Coming soon': 'Sắp chiếu', Archived: 'Đã lưu trữ',
+      Drama: 'Chính kịch', Crime: 'Tội phạm', Action: 'Hành động',
+      Fantasy: 'Kỳ ảo', Western: 'Viễn Tây', 'Sci-fi': 'Khoa học viễn tưởng',
+      Thriller: 'Giật gân', Comedy: 'Hài', Adventure: 'Phiêu lưu', Romance: 'Tình cảm',
+      'Feature film': 'Phim dài', 'TV series': 'Phim truyền hình',
+      'Anime film': 'Phim hoạt hình dài', 'Web series': 'Phim chiếu trực tuyến',
+      OVA: 'Hoạt hình phát hành riêng', 'TV special': 'Tập truyền hình đặc biệt'
+    };
+    const sourceTitles = new Map(seed.titles.map(title => [title.id, title]));
+    const dateFormat = new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const shortDate = new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit' });
+    const numbers = new Intl.NumberFormat('vi-VN');
+    const scores = [1, 2].map(digits => new Intl.NumberFormat('vi-VN', {
+      minimumFractionDigits: digits, maximumFractionDigits: digits
+    }));
     const editor = byId('editor');
     const form = byId('editor-form');
     const reportEditor = byId('report-editor');
     const reportForm = byId('report-form');
+    const confirmDialog = byId('confirm-dialog');
     let editing;
+    let confirmAction;
     let sequence = 0;
     let catalog = loadCatalog();
 
@@ -418,6 +446,19 @@
       return new Option(label, value);
     }
 
+    function localLabel(value) {
+      return Object.hasOwn(labels, value) ? labels[value] : value;
+    }
+
+    function titleName(title) {
+      const source = sourceTitles.get(title.id);
+      return source?.title === title.title ? source.vietnameseTitle : title.title;
+    }
+
+    function compareNames(first, second) {
+      return first.localeCompare(second, 'vi-VN');
+    }
+
     function rowHeading(text) {
       const cell = element('th', text);
       cell.scope = 'row';
@@ -432,7 +473,7 @@
 
     function actionCell(kind, record, name) {
       const cell = element('td', null, 'actions');
-      for (const [action, label] of [['edit', 'Edit'], ['delete', 'Delete']]) {
+      for (const [action, label] of [['edit', 'Sửa'], ['delete', 'Xóa']]) {
         const button = element('button', label, action === 'delete' ? 'danger' : '');
         button.type = 'button';
         button.dataset.action = action;
@@ -445,35 +486,35 @@
     }
 
     function searchMatches(query, fields) {
-      const normalize = value => value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+      const normalize = value => value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').replaceAll('đ', 'd');
       const text = normalize(fields.join(' '));
       return normalize(query).trim().split(/\s+/).every(term => text.includes(term));
     }
 
-    function showRows(prefix, records, row, singular, plural) {
+    function showRows(prefix, records, row, unit) {
       byId(prefix + '-rows').replaceChildren(...records.map(row));
       byId(prefix + '-empty').hidden = records.length > 0;
-      byId(prefix + '-count').textContent = numbers.format(records.length) + ' ' + (records.length === 1 ? singular : plural);
+      byId(prefix + '-count').textContent = numbers.format(records.length) + ' ' + unit;
     }
 
     function renderTitles() {
       const filters = byId('title-filters').elements;
       const genre = filters.genre.value;
-      const genres = [...new Set(catalog.titles.map(title => title.genre).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-      filters.genre.replaceChildren(option('', 'All genres'), ...genres.map(value => option(value)));
+      const genres = [...new Set(catalog.titles.map(title => localLabel(title.genre)).filter(Boolean))].sort(compareNames);
+      filters.genre.replaceChildren(option('', 'Tất cả thể loại'), ...genres.map(value => option(value)));
       filters.genre.value = genres.includes(genre) ? genre : '';
 
       const titles = catalog.titles.filter(title =>
-        searchMatches(filters.search.value, [title.title, title.alternateTitle, title.director, title.year]) &&
+        searchMatches(filters.search.value, [titleName(title), sourceTitles.get(title.id)?.title, title.alternateTitle, title.director, title.year]) &&
         (!filters.category.value || title.category === filters.category.value) &&
-        (!filters.genre.value || title.genre === filters.genre.value) &&
+        (!filters.genre.value || localLabel(title.genre) === filters.genre.value) &&
         (!filters.date.value || title.releaseDate === filters.date.value)
       );
       const dateValue = title => title.releaseDate || String(title.year);
       const sorters = {
         newest: (a, b) => dateValue(b).localeCompare(dateValue(a)),
         oldest: (a, b) => dateValue(a).localeCompare(dateValue(b)),
-        name: (a, b) => a.title.localeCompare(b.title),
+        name: (a, b) => compareNames(titleName(a), titleName(b)),
         score: (a, b) => (b.score ?? -1) - (a.score ?? -1)
       };
       if (sorters[filters.sort.value]) titles.sort(sorters[filters.sort.value]);
@@ -485,31 +526,31 @@
         const row = element('tr');
         const name = rowHeading();
         if (title.sourceId) {
-          const link = element('a', title.title);
+          const link = element('a', titleName(title));
           link.href = title.category === 'Film'
             ? 'https://www.imdb.com/title/' + title.sourceId + '/'
             : 'https://myanimelist.net/anime/' + title.sourceId;
           name.append(link);
         } else {
-          name.textContent = title.title;
+          name.textContent = titleName(title);
         }
-        name.append(element('small', [title.category, title.format, title.director].filter(Boolean).join(' · ')));
-        const views = element('td', numbers.format(viewCounts.get(title.id) || 0) + ' views', 'numeric');
+        name.append(element('small', [localLabel(title.category), localLabel(title.format), title.director].filter(Boolean).join(' · ')));
+        const views = element('td', numbers.format(viewCounts.get(title.id) || 0) + ' lượt', 'numeric');
         if (title.score !== null) {
-          views.append(element('small', title.score.toFixed(title.category === 'Film' ? 1 : 2) + ' / 10', 'score'));
+          views.append(element('small', scores[title.category === 'Film' ? 0 : 1].format(title.score) + ' / 10', 'score'));
         }
         row.append(
           element('td', title.rank || '—', 'numeric muted'),
           name,
-          title.genre ? pillCell(title.genre) : element('td', '—'),
+          title.genre ? pillCell(localLabel(title.genre)) : element('td', '—'),
           element('td', title.releaseDate ? displayDate(title.releaseDate) : title.year, 'numeric'),
-          element('td', title.runtime ? title.runtime + ' min' : '—', 'numeric'),
+          element('td', title.runtime ? numbers.format(title.runtime) + ' phút' : '—', 'numeric'),
           views,
-          pillCell(title.status, title.status === 'Available' ? 'good' : title.status === 'Coming soon' ? 'soon' : ''),
-          actionCell('titles', title, title.title)
+          pillCell(localLabel(title.status), title.status === 'Available' ? 'good' : title.status === 'Coming soon' ? 'soon' : ''),
+          actionCell('titles', title, titleName(title))
         );
         return row;
-      }, 'title', 'titles');
+      }, 'phim');
     }
 
     function renderMembers() {
@@ -517,31 +558,31 @@
       const members = catalog.members.filter(member =>
         searchMatches(filters.search.value, [member.name, member.email]) &&
         (!filters.plan.value || member.plan === filters.plan.value)
-      ).sort((a, b) => a.name.localeCompare(b.name));
+      ).sort((a, b) => compareNames(a.name, b.name));
 
       showRows('member', members, member => {
         const row = element('tr');
         row.append(
           rowHeading(member.name),
           element('td', member.email),
-          pillCell(member.plan, member.plan === 'Free' ? '' : 'paid'),
+          pillCell(localLabel(member.plan), member.plan === 'Free' ? '' : 'paid'),
           element('td', displayDate(member.joined), 'numeric'),
           actionCell('members', member, member.name)
         );
         return row;
-      }, 'member', 'members');
+      }, 'thành viên');
     }
 
     function renderHistory() {
       const filters = byId('history-filters').elements;
-      const titles = new Map(catalog.titles.map(title => [title.id, title.title]));
+      const titles = new Map(catalog.titles.map(title => [title.id, titleName(title)]));
       const members = new Map(catalog.members.map(member => [member.id, member.name]));
       const views = catalog.history.map(view => ({
         ...view,
         title: titles.get(view.titleId),
         member: members.get(view.memberId)
       })).filter(view =>
-        searchMatches(filters.search.value, [view.title, view.member]) &&
+        searchMatches(filters.search.value, [view.title, sourceTitles.get(view.titleId)?.title, view.member]) &&
         (!filters.date.value || view.date === filters.date.value)
       ).sort((a, b) => b.date.localeCompare(a.date));
 
@@ -551,11 +592,11 @@
           rowHeading(view.title),
           element('td', view.member),
           element('td', displayDate(view.date), 'numeric'),
-          element('td', numbers.format(view.minutes) + ' min', 'numeric'),
-          actionCell('history', view, view.title + ' view for ' + view.member)
+          element('td', numbers.format(view.minutes) + ' phút', 'numeric'),
+          actionCell('history', view, 'lượt xem ' + view.title + ' của ' + view.member)
         );
         return row;
-      }, 'view', 'views');
+      }, 'lượt xem');
       document.querySelector('[data-action="add"][data-kind="history"]').disabled =
         !catalog.titles.length || !catalog.members.length;
     }
@@ -599,10 +640,10 @@
       const report = { ...logged, ...catalog.reportOverrides };
       byId('total-views').textContent = numbers.format(report.totalViews);
       byId('unique-viewers').textContent = numbers.format(report.uniqueViewers);
-      byId('watch-time').textContent = numbers.format(report.watchMinutes) + ' min';
+      byId('watch-time').textContent = numbers.format(report.watchMinutes) + ' phút';
       byId('paid-subs').textContent = numbers.format(report.Monthly + report.Annual);
       barChart('view-chart', reportDays().map(date => [displayDate(date, shortDate), report[date]]));
-      barChart('plan-chart', plans.map(plan => [plan, report[plan]]));
+      barChart('plan-chart', plans.map(plan => [localLabel(plan), report[plan]]));
       byId('use-logged-numbers').hidden = !Object.keys(logged).some(key => Object.hasOwn(catalog.reportOverrides || {}, key));
     }
 
@@ -634,44 +675,44 @@
 
     function fieldsFor(kind) {
       if (kind === 'titles') return [
-        { key: 'title', label: 'Title', required: true, wide: true },
-        { key: 'alternateTitle', label: 'Alternate title', wide: true },
-        { key: 'category', label: 'Category', choices: ['Film', 'Anime'] },
-        { key: 'genre', label: 'Genre' },
-        { key: 'format', label: 'Format' },
-        { key: 'director', label: 'Director' },
-        { key: 'year', label: 'Release year', type: 'number', min: 1, max: 9999, required: true },
-        { key: 'releaseDate', label: 'Release date', type: 'date' },
-        { key: 'runtime', label: 'Runtime (minutes)', type: 'number', min: 1 },
-        { key: 'score', label: 'Score (0–10)', type: 'number', min: 0, max: 10, step: .01 },
-        { key: 'status', label: 'Status', choices: statuses, wide: true }
+        { key: 'title', label: 'Tên phim', required: true, wide: true },
+        { key: 'alternateTitle', label: 'Tên khác', wide: true },
+        { key: 'category', label: 'Loại phim', choices: ['Film', 'Anime'] },
+        { key: 'genre', label: 'Thể loại' },
+        { key: 'format', label: 'Định dạng' },
+        { key: 'director', label: 'Đạo diễn' },
+        { key: 'year', label: 'Năm phát hành', type: 'number', min: 1, max: 9999, required: true },
+        { key: 'releaseDate', label: 'Ngày phát hành', type: 'date' },
+        { key: 'runtime', label: 'Thời lượng (phút)', type: 'number', min: 1 },
+        { key: 'score', label: 'Điểm (0–10)', type: 'number', min: 0, max: 10, step: .01 },
+        { key: 'status', label: 'Trạng thái', choices: statuses, wide: true }
       ];
       if (kind === 'members') return [
-        { key: 'name', label: 'Name', required: true, wide: true },
+        { key: 'name', label: 'Họ tên', required: true, wide: true },
         { key: 'email', label: 'Email', type: 'email', required: true, wide: true },
-        { key: 'plan', label: 'Plan', choices: plans },
-        { key: 'joined', label: 'Joined on', type: 'date', required: true, max: dayKey(), initial: dayKey() }
+        { key: 'plan', label: 'Gói', choices: plans },
+        { key: 'joined', label: 'Ngày tham gia', type: 'date', required: true, max: dayKey(), initial: dayKey() }
       ];
       return [
-        { key: 'titleId', label: 'Title', choices: catalog.titles.map(title => [title.id, title.title]), wide: true },
-        { key: 'memberId', label: 'Member', choices: catalog.members.map(member => [member.id, member.name]), wide: true },
-        { key: 'date', label: 'Watched on', type: 'date', required: true, max: dayKey(), initial: dayKey() },
-        { key: 'minutes', label: 'Minutes watched', type: 'number', min: 1, required: true }
+        { key: 'titleId', label: 'Tên phim', choices: catalog.titles.map(title => [title.id, titleName(title)]), wide: true },
+        { key: 'memberId', label: 'Thành viên', choices: catalog.members.map(member => [member.id, member.name]), wide: true },
+        { key: 'date', label: 'Ngày xem', type: 'date', required: true, max: dayKey(), initial: dayKey() },
+        { key: 'minutes', label: 'Số phút đã xem', type: 'number', min: 1, required: true }
       ];
     }
 
     function openEditor(kind, id) {
       const record = catalog[kind].find(item => item.id === id);
       editing = { kind, record };
-      const names = { titles: 'title', members: 'member', history: 'view' };
-      byId('editor-heading').textContent = record ? 'Edit ' + names[kind] : kind === 'history' ? 'Log a view' : 'Add ' + names[kind];
+      const names = { titles: 'phim', members: 'thành viên', history: 'lượt xem' };
+      byId('editor-heading').textContent = record ? 'Sửa ' + names[kind] : kind === 'history' ? 'Ghi lượt xem' : 'Thêm ' + names[kind];
       byId('form-error').textContent = '';
       byId('form-fields').replaceChildren(...fieldsFor(kind).map(field => {
         const label = element('label', field.label, field.wide ? 'wide' : '');
         const input = element(field.choices ? 'select' : 'input');
         input.name = field.key;
         if (field.choices) {
-          input.append(...field.choices.map(choice => Array.isArray(choice) ? option(...choice) : option(choice)));
+          input.append(...field.choices.map(choice => Array.isArray(choice) ? option(...choice) : option(choice, localLabel(choice))));
         } else {
           input.type = field.type || 'text';
           for (const constraint of ['min', 'max', 'step']) {
@@ -680,6 +721,8 @@
           input.required = Boolean(field.required);
         }
         input.value = record?.[field.key] ?? field.initial ?? input.value;
+        if (record && field.key === 'title') input.value = titleName(record);
+        if (field.key === 'genre' || field.key === 'format') input.value = localLabel(input.value);
         if (record?.sourceId && field.key === 'category') input.disabled = true;
         label.append(input);
         return label;
@@ -687,35 +730,73 @@
       editor.showModal();
     }
 
+    function validateForm(activeForm, errorId) {
+      const invalid = [...activeForm.elements].find(field => field.willValidate && !field.validity.valid);
+      const error = byId(errorId);
+      error.textContent = '';
+      if (!invalid) return true;
+
+      const label = invalid.labels[0].textContent.trim();
+      const issue = invalid.validity;
+      let message = 'Giá trị chưa hợp lệ.';
+      if (issue.badInput) message = invalid.type === 'date' ? 'Hãy nhập ngày hợp lệ.' : 'Hãy nhập số hợp lệ.';
+      else if (issue.valueMissing) message = 'Hãy điền mục này.';
+      else if (issue.typeMismatch && invalid.type === 'email') message = 'Hãy nhập địa chỉ email hợp lệ.';
+      else if (issue.rangeUnderflow || issue.rangeOverflow) {
+        const limit = issue.rangeUnderflow ? invalid.min : invalid.max;
+        const value = invalid.type === 'date' ? displayDate(limit) : numbers.format(limit);
+        message = (issue.rangeUnderflow ? 'Giá trị tối thiểu là ' : 'Giá trị tối đa là ') + value + '.';
+      }
+      error.textContent = label + '. ' + message;
+      invalid.focus();
+      return false;
+    }
+
+    function askConfirmation(message, buttonLabel, action) {
+      byId('confirm-message').textContent = message;
+      byId('confirm-apply').textContent = buttonLabel;
+      confirmAction = action;
+      confirmDialog.returnValue = '';
+      confirmDialog.showModal();
+    }
+
+    confirmDialog.addEventListener('close', () => {
+      const action = confirmAction;
+      confirmAction = undefined;
+      if (confirmDialog.returnValue === 'apply') action();
+    });
+
     function removeRecord(kind, id) {
       const record = catalog[kind].find(item => item.id === id);
-      const label = record.title || record.name || 'this view';
+      const label = kind === 'titles' ? titleName(record) : record.name || 'lượt xem này';
       const key = kind === 'titles' ? 'titleId' : 'memberId';
       const linked = kind === 'history' ? [] : catalog.history.filter(view => view[key] === id);
-      const detail = linked.length ? ' This also removes ' + linked.length + (linked.length === 1 ? ' linked view.' : ' linked views.') : '';
-      if (!confirm('Delete ' + label + '?' + detail)) return;
-      catalog[kind] = catalog[kind].filter(item => item.id !== id);
-      if (linked.length) catalog.history = catalog.history.filter(view => view[key] !== id);
-      saveCatalog('Deleted ' + label + '.');
+      const detail = linked.length ? ' Thao tác này cũng xóa ' + numbers.format(linked.length) + ' lượt xem liên quan.' : '';
+      askConfirmation('Xóa ' + label + '?' + detail, 'Xóa', () => {
+        catalog[kind] = catalog[kind].filter(item => item.id !== id);
+        if (linked.length) catalog.history = catalog.history.filter(view => view[key] !== id);
+        saveCatalog('Đã xóa ' + label + '.');
+      });
     }
 
     form.addEventListener('submit', event => {
       event.preventDefault();
+      if (!validateForm(form, 'form-error')) return;
       const { kind, record } = editing;
       const values = Object.fromEntries([...new FormData(form)].map(([key, value]) => [key, value.trim()]));
       let problem = '';
       if (kind === 'titles') {
-        if (!values.title) problem = 'Enter a title.';
+        if (!values.title) problem = 'Hãy nhập tên phim.';
         values.year = Number(values.year);
         if (values.releaseDate && Number(values.releaseDate.split('-')[0]) !== values.year) {
-          problem = 'The release date and year should match.';
+          problem = 'Ngày và năm phát hành phải khớp nhau.';
         }
         values.runtime = values.runtime ? Number(values.runtime) : null;
         values.score = values.score === '' ? null : Number(values.score);
       } else if (kind === 'members') {
-        if (!values.name) problem = 'Enter a name.';
+        if (!values.name) problem = 'Hãy nhập họ tên.';
         else if (catalog.members.some(member => member.id !== record?.id && member.email.toLowerCase() === values.email.toLowerCase())) {
-          problem = 'That email already belongs to a member.';
+          problem = 'Email này đã được một thành viên sử dụng.';
         }
       } else {
         values.minutes = Number(values.minutes);
@@ -730,42 +811,45 @@
       if (record) catalog[kind] = catalog[kind].map(item => item.id === id ? updated : item);
       else catalog[kind].push(updated);
       editor.close();
-      saveCatalog(record ? 'Changes saved.' : kind === 'history' ? 'View logged.' : 'Record added.');
+      saveCatalog(record ? 'Đã lưu thay đổi.' : kind === 'history' ? 'Đã ghi lượt xem.' : 'Đã thêm.');
     });
 
     byId('cancel-edit').addEventListener('click', () => editor.close());
     byId('edit-report').addEventListener('click', () => {
       const report = { ...loggedReportNumbers(), ...catalog.reportOverrides };
+      byId('report-error').textContent = '';
       byId('report-fields').replaceChildren(
-        reportFields('Totals', [
-          ['totalViews', 'Total views'],
-          ['uniqueViewers', 'Unique viewers'],
-          ['watchMinutes', 'Watch time (min)']
+        reportFields('Tổng quan', [
+          ['totalViews', 'Tổng lượt xem'],
+          ['uniqueViewers', 'Số người xem'],
+          ['watchMinutes', 'Thời gian xem (phút)']
         ], report),
-        reportFields('Daily views', reportDays().map(date => [date, displayDate(date, shortDate)]), report),
-        reportFields('Members by plan', plans.map(plan => [plan, plan]), report)
+        reportFields('Lượt xem theo ngày', reportDays().map(date => [date, displayDate(date, shortDate)]), report),
+        reportFields('Thành viên theo gói', plans.map(plan => [plan, localLabel(plan)]), report)
       );
       reportEditor.showModal();
     });
     byId('cancel-report').addEventListener('click', () => reportEditor.close());
     reportForm.addEventListener('submit', event => {
       event.preventDefault();
+      if (!validateForm(reportForm, 'report-error')) return;
       const logged = loggedReportNumbers();
       const values = [...new FormData(reportForm)].map(([key, value]) => [key, Number(value)]);
       catalog.reportOverrides = Object.fromEntries(values.filter(([key, value]) => value !== logged[key]));
       reportEditor.close();
-      saveCatalog('Report saved.');
+      saveCatalog('Đã lưu số liệu.');
     });
     byId('use-logged-numbers').addEventListener('click', () => {
       delete catalog.reportOverrides;
-      saveCatalog('Report restored.');
+      saveCatalog('Đã khôi phục số liệu gốc.');
       byId('edit-report').focus();
     });
     byId('reset-data').addEventListener('click', () => {
-      if (!confirm('Reset the sample data? Your changes in this browser will be removed.')) return;
-      catalog = sampleCatalog();
-      for (const filters of document.querySelectorAll('.filters')) filters.reset();
-      saveCatalog('Sample data restored.');
+      askConfirmation('Khôi phục dữ liệu mẫu? Các thay đổi trên trình duyệt này sẽ bị xóa.', 'Khôi phục', () => {
+        catalog = sampleCatalog();
+        for (const filters of document.querySelectorAll('.filters')) filters.reset();
+        saveCatalog('Đã khôi phục dữ liệu mẫu.');
+      });
     });
 
     document.querySelector('main').addEventListener('click', event => {

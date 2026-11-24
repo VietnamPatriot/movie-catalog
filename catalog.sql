@@ -11,6 +11,7 @@ CREATE TABLE titles (
   format TEXT NOT NULL,
   score REAL NOT NULL CHECK (score BETWEEN 0 AND 10),
   source_id TEXT NOT NULL,
+  vietnamese_title TEXT,
   director TEXT,
   genre TEXT,
   release_date TEXT,
@@ -61,6 +62,52 @@ INSERT INTO titles (category, chart_rank, title, alternate_title, release_year, 
   ('Anime', 18, 'Clannad: After Story', NULL, 2008, 'TV series', 8.93, '4181'),
   ('Anime', 19, 'Gintama', NULL, 2006, 'TV series', 8.93, '918'),
   ('Anime', 20, 'A Silent Voice', 'Koe no Katachi', 2016, 'Anime film', 8.93, '28851');
+
+WITH localized (source_id, name) AS (
+  VALUES
+    ('tt0111161', 'Nhà tù Shawshank'),
+    ('tt0068646', 'Bố già'),
+    ('tt0468569', 'Kỵ sĩ bóng đêm'),
+    ('tt0071562', 'Bố già phần II'),
+    ('tt0167260', 'Chúa tể những chiếc nhẫn: Sự trở về của nhà vua'),
+    ('tt0050083', '12 người đàn ông giận dữ'),
+    ('tt0108052', 'Bản danh sách của Schindler'),
+    ('tt0120737', 'Chúa tể những chiếc nhẫn: Hiệp hội nhẫn thần'),
+    ('tt0110912', 'Chuyện tầm phào'),
+    ('tt0167261', 'Chúa tể những chiếc nhẫn: Hai tòa tháp'),
+    ('tt0060196', 'Thiện, ác, tà'),
+    ('tt0109830', 'Cuộc đời Forrest Gump'),
+    ('tt1375666', 'Kẻ đánh cắp giấc mơ'),
+    ('tt0137523', 'Sàn đấu sinh tử'),
+    ('tt0080684', 'Chiến tranh giữa các vì sao: Tập V – Đế chế phản công'),
+    ('tt0133093', 'Ma trận'),
+    ('tt0816692', 'Hố đen tử thần'),
+    ('tt0099685', 'Chiến hữu'),
+    ('tt0073486', 'Bay trên tổ chim cúc cu'),
+    ('tt0114369', 'Bảy tội lỗi'),
+    ('52991', 'Frieren: Pháp sư tiễn táng'),
+    ('5114', 'Giả kim thuật sư: Tình anh em'),
+    ('9253', 'Steins;Gate: Cánh cổng thời gian'),
+    ('38524', 'Đại chiến Titan: Mùa 3, phần 2'),
+    ('57555', 'Chainsaw Man: Chương Reze'),
+    ('39486', 'Gintama: Hồi kết'),
+    ('28977', 'Gintama° (2015)'),
+    ('61316', 'Re:Zero: Bắt đầu lại ở thế giới khác, mùa 4'),
+    ('11061', 'Thợ săn x Thợ săn (2011)'),
+    ('61469', 'Cuộc phiêu lưu kỳ bí của JoJo: Cuộc đua ngựa thép'),
+    ('820', 'Huyền thoại các anh hùng ngân hà'),
+    ('9969', 'Gintama: Phần tiếp nối (2011)'),
+    ('15417', 'Gintama: Phần mở rộng (2012)'),
+    ('60022', 'Đảo hải tặc: Lá thư của người hâm mộ'),
+    ('34096', 'Gintama. (2017)'),
+    ('41467', 'Bleach: Huyết chiến ngàn năm'),
+    ('43608', 'Kaguya-sama: Cuộc chiến tỏ tình, mùa 3'),
+    ('4181', 'Clannad: Câu chuyện tiếp theo'),
+    ('918', 'Gintama (2006)'),
+    ('28851', 'Dáng hình thanh âm')
+)
+UPDATE titles
+SET vietnamese_title = (SELECT name FROM localized WHERE localized.source_id = titles.source_id);
 
 WITH details (source_id, director, genre, release_date, runtime) AS (
   VALUES
