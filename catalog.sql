@@ -1,3 +1,5 @@
+PRAGMA foreign_keys = ON;
+
 BEGIN;
 
 CREATE TABLE titles (
@@ -9,11 +11,16 @@ CREATE TABLE titles (
   format TEXT NOT NULL,
   score REAL NOT NULL CHECK (score BETWEEN 0 AND 10),
   source_id TEXT NOT NULL,
+  director TEXT,
+  genre TEXT,
+  release_date TEXT,
+  runtime INTEGER CHECK (runtime > 0),
+  status TEXT NOT NULL DEFAULT 'Available' CHECK (status IN ('Available', 'Coming soon', 'Archived')),
   PRIMARY KEY (category, chart_rank),
   UNIQUE (category, source_id)
 );
 
-INSERT INTO titles VALUES
+INSERT INTO titles (category, chart_rank, title, alternate_title, release_year, format, score, source_id) VALUES
   ('Film', 1, 'The Shawshank Redemption', NULL, 1994, 'Feature film', 9.3, 'tt0111161'),
   ('Film', 2, 'The Godfather', NULL, 1972, 'Feature film', 9.2, 'tt0068646'),
   ('Film', 3, 'The Dark Knight', NULL, 2008, 'Feature film', 9.1, 'tt0468569'),
@@ -54,5 +61,90 @@ INSERT INTO titles VALUES
   ('Anime', 18, 'Clannad: After Story', NULL, 2008, 'TV series', 8.93, '4181'),
   ('Anime', 19, 'Gintama', NULL, 2006, 'TV series', 8.93, '918'),
   ('Anime', 20, 'A Silent Voice', 'Koe no Katachi', 2016, 'Anime film', 8.93, '28851');
+
+WITH details (source_id, director, genre, release_date, runtime) AS (
+  VALUES
+    ('tt0111161', 'Frank Darabont', 'Drama', '1994-09-23', 142),
+    ('tt0068646', 'Francis Ford Coppola', 'Crime', '1972-03-24', 175),
+    ('tt0468569', 'Christopher Nolan', 'Action', '2008-07-18', 152),
+    ('tt0071562', 'Francis Ford Coppola', 'Crime', '1974-12-20', 202),
+    ('tt0167260', 'Peter Jackson', 'Fantasy', '2003-12-17', 201),
+    ('tt0050083', 'Sidney Lumet', 'Drama', '1957-04-10', 96),
+    ('tt0108052', 'Steven Spielberg', 'Drama', '1993-12-15', 196),
+    ('tt0120737', 'Peter Jackson', 'Fantasy', '2001-12-19', 178),
+    ('tt0110912', 'Quentin Tarantino', 'Crime', '1994-10-14', 154),
+    ('tt0167261', 'Peter Jackson', 'Fantasy', '2002-12-18', 179),
+    ('tt0060196', 'Sergio Leone', 'Western', '1966-12-23', 178),
+    ('tt0109830', 'Robert Zemeckis', 'Drama', '1994-07-06', 142),
+    ('tt1375666', 'Christopher Nolan', 'Sci-fi', '2010-07-16', 148),
+    ('tt0137523', 'David Fincher', 'Drama', '1999-10-15', 139),
+    ('tt0080684', 'Irvin Kershner', 'Sci-fi', '1980-05-21', 124),
+    ('tt0133093', 'Lana and Lilly Wachowski', 'Sci-fi', '1999-03-31', 136),
+    ('tt0816692', 'Christopher Nolan', 'Sci-fi', '2014-11-07', 169),
+    ('tt0099685', 'Martin Scorsese', 'Crime', '1990-09-19', 145),
+    ('tt0073486', 'Miloš Forman', 'Drama', '1975-11-19', 133),
+    ('tt0114369', 'David Fincher', 'Thriller', '1995-09-22', 127),
+    ('52991', 'Keiichirō Saitō', 'Fantasy', '2023-09-29', NULL),
+    ('5114', 'Yasuhiro Irie', 'Fantasy', '2009-04-05', NULL),
+    ('9253', 'Hiroshi Hamasaki, Takuya Satō', 'Sci-fi', '2011-04-06', NULL),
+    ('38524', 'Tetsurō Araki, Masashi Koizuka', 'Action', '2019-04-29', NULL),
+    ('57555', 'Tatsuya Yoshihara', 'Action', '2025-09-19', 100),
+    ('39486', 'Chizuru Miyawaki', 'Comedy', '2021-01-08', 104),
+    ('28977', 'Chizuru Miyawaki', 'Comedy', '2015-04-08', NULL),
+    ('61316', 'Masahiro Shinohara', 'Fantasy', NULL, NULL),
+    ('11061', 'Hiroshi Kōjina', 'Adventure', '2011-10-02', NULL),
+    ('61469', NULL, 'Adventure', NULL, NULL),
+    ('820', 'Noboru Ishiguro', 'Sci-fi', NULL, NULL),
+    ('9969', 'Yōichi Fujita', 'Comedy', '2011-04-04', NULL),
+    ('15417', 'Yōichi Fujita', 'Comedy', '2012-10-04', NULL),
+    ('60022', 'Megumi Ishitani', 'Adventure', '2024-10-20', 25),
+    ('34096', 'Chizuru Miyawaki', 'Comedy', '2017-01-09', NULL),
+    ('41467', 'Tomohisa Taguchi', 'Action', '2022-10-11', NULL),
+    ('43608', 'Mamoru Hatakeyama', 'Romance', '2022-04-09', NULL),
+    ('4181', 'Tatsuya Ishihara', 'Drama', '2008-10-03', NULL),
+    ('918', 'Shinji Takamatsu, Yōichi Fujita', 'Comedy', '2006-04-04', NULL),
+    ('28851', 'Naoko Yamada', 'Drama', '2016-09-17', 130)
+)
+UPDATE titles
+SET (director, genre, release_date, runtime) = (
+  SELECT director, genre, release_date, runtime
+  FROM details
+  WHERE details.source_id = titles.source_id
+);
+
+CREATE TABLE members (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL COLLATE NOCASE UNIQUE,
+  plan TEXT NOT NULL CHECK (plan IN ('Free', 'Monthly', 'Annual')),
+  joined_on TEXT NOT NULL
+);
+
+CREATE TABLE watch_history (
+  id TEXT PRIMARY KEY,
+  category TEXT NOT NULL,
+  source_id TEXT NOT NULL,
+  member_id TEXT NOT NULL REFERENCES members(id) ON DELETE RESTRICT,
+  watched_on TEXT NOT NULL,
+  minutes INTEGER NOT NULL CHECK (minutes > 0),
+  FOREIGN KEY (category, source_id) REFERENCES titles(category, source_id) ON DELETE RESTRICT
+);
+
+INSERT INTO members VALUES
+  ('m1', 'Alex Rivera', 'alex@example.com', 'Monthly', date('now', '-45 days')),
+  ('m2', 'Jamie Chen', 'jamie@example.com', 'Annual', date('now', '-30 days')),
+  ('m3', 'Morgan Lee', 'morgan@example.com', 'Free', date('now', '-15 days')),
+  ('m4', 'Sam Patel', 'sam@example.com', 'Monthly', date('now', '-8 days')),
+  ('m5', 'Taylor Nguyen', 'taylor@example.com', 'Free', date('now', '-6 days'));
+
+INSERT INTO watch_history VALUES
+  ('w1', 'Film', 'tt0111161', 'm1', date('now', '-6 days'), 142),
+  ('w2', 'Anime', '52991', 'm2', date('now', '-5 days'), 24),
+  ('w3', 'Anime', '5114', 'm2', date('now', '-3 days'), 24),
+  ('w4', 'Film', 'tt0468569', 'm3', date('now', '-3 days'), 92),
+  ('w5', 'Anime', '52991', 'm4', date('now', '-2 days'), 24),
+  ('w6', 'Film', 'tt0816692', 'm1', date('now', '-1 day'), 169),
+  ('w7', 'Anime', '9253', 'm5', date('now'), 24),
+  ('w8', 'Anime', '52991', 'm2', date('now'), 24);
 
 COMMIT;
