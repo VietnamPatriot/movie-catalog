@@ -23,7 +23,7 @@
 
     * { box-sizing: border-box; }
     body { margin: 0; }
-    main { width: min(calc(100% - 2rem), 78rem); margin: 0 auto; }
+    main { width: min(calc(100% - 2rem), 78rem); margin: 0 auto; padding-bottom: 2rem; }
     header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding: 2rem 0 1.4rem; }
     h1, h2, h3, p { margin: 0; }
     h1 { font-size: clamp(1.6rem, 4vw, 2.55rem); line-height: 1.15; letter-spacing: -.035em; }
@@ -49,7 +49,7 @@
     .primary { background: var(--accent); border-color: var(--accent); color: #1c153f; }
     .primary:hover { background: #d5cbff; }
     .danger { color: var(--pink); }
-    .muted, small, footer { color: var(--muted); }
+    .muted, small { color: var(--muted); }
     small { display: block; font-size: .875rem; }
     nav { display: flex; gap: .4rem; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: .75rem; }
     nav button { background: transparent; border-color: transparent; color: var(--muted); }
@@ -91,7 +91,7 @@
     .notice { margin-top: .75rem; color: var(--gold); }
     #feedback { margin-top: .6rem; color: var(--mint); }
     #feedback:empty { display: none; }
-    footer { padding: 1.25rem 0 2rem; font-size: .875rem; }
+    .report-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
     .metrics, .charts { display: grid; gap: .85rem; }
     .metrics { grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); margin-bottom: .85rem; }
     .charts { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); align-items: start; }
@@ -116,6 +116,9 @@
 
     dialog::backdrop { background: #070a12c7; }
     .form-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin: .9rem 0; }
+    #report-fields fieldset { min-width: 0; margin: .9rem 0; padding: 0; border: 0; }
+    #report-fields legend { padding: 0; font-weight: 650; }
+    .report-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: .65rem; margin-top: .4rem; }
     .wide { grid-column: 1 / -1; }
     .form-actions { display: flex; gap: .5rem; justify-content: end; margin-top: .85rem; }
     #form-error { color: var(--pink); font-size: .875rem; }
@@ -233,10 +236,15 @@
     </section>
 
     <section id="reports" aria-labelledby="reports-heading" hidden>
-      <div class="section-heading"><h2 id="reports-heading">Reports</h2></div>
-      <p class="muted">Counts come from the members and views saved in this browser.</p>
+      <div class="section-heading">
+        <h2 id="reports-heading">Reports</h2>
+        <div class="report-actions">
+          <button type="button" id="use-logged-numbers" hidden>Use logged data</button>
+          <button type="button" class="primary" id="edit-report">Edit numbers</button>
+        </div>
+      </div>
       <dl class="metrics">
-        <div class="metric"><dt>Logged views</dt><dd id="total-views">0</dd></div>
+        <div class="metric"><dt>Total views</dt><dd id="total-views">0</dd></div>
         <div class="metric"><dt>Unique viewers</dt><dd id="unique-viewers">0</dd></div>
         <div class="metric"><dt>Watch time</dt><dd id="watch-time">0 min</dd></div>
         <div class="metric"><dt>Paid subscribers</dt><dd id="paid-subs">0</dd></div>
@@ -253,9 +261,6 @@
       </div>
     </section>
 
-    <footer>
-      Changes are saved in this browser. Catalog sources <a href="https://www.imdb.com/chart/top/">IMDb</a> and <a href="https://myanimelist.net/topanime.php">MyAnimeList</a>.
-    </footer>
   </main>
 
   <dialog id="editor" aria-labelledby="editor-heading">
@@ -266,6 +271,17 @@
       <div class="form-actions">
         <button type="button" id="cancel-edit">Cancel</button>
         <button type="submit" class="primary" id="save-edit">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="report-editor" aria-labelledby="report-editor-heading">
+    <form id="report-form">
+      <h2 id="report-editor-heading">Edit report numbers</h2>
+      <div id="report-fields"></div>
+      <div class="form-actions">
+        <button type="button" id="cancel-report">Cancel</button>
+        <button type="submit" class="primary">Save</button>
       </div>
     </form>
   </dialog>
@@ -344,6 +360,8 @@
     const numbers = new Intl.NumberFormat('en');
     const editor = byId('editor');
     const form = byId('editor-form');
+    const reportEditor = byId('report-editor');
+    const reportForm = byId('report-form');
     let editing;
     let sequence = 0;
     let catalog = loadCatalog();
@@ -556,22 +574,55 @@
       }));
     }
 
-    function renderReports() {
+    function reportDays() {
+      return Array.from({ length: 7 }, (_, index) => dayKey(6 - index));
+    }
+
+    function loggedReportNumbers() {
       const viewsByDate = new Map();
       let totalMinutes = 0;
       for (const view of catalog.history) {
         viewsByDate.set(view.date, (viewsByDate.get(view.date) || 0) + 1);
         totalMinutes += view.minutes;
       }
-      byId('total-views').textContent = numbers.format(catalog.history.length);
-      byId('unique-viewers').textContent = numbers.format(new Set(catalog.history.map(view => view.memberId)).size);
-      byId('watch-time').textContent = numbers.format(totalMinutes) + ' min';
-      byId('paid-subs').textContent = numbers.format(catalog.members.filter(member => member.plan !== 'Free').length);
-      barChart('view-chart', Array.from({ length: 7 }, (_, index) => {
-        const date = dayKey(6 - index);
-        return [displayDate(date, shortDate), viewsByDate.get(date) || 0];
-      }));
-      barChart('plan-chart', plans.map(plan => [plan, catalog.members.filter(member => member.plan === plan).length]));
+      return {
+        totalViews: catalog.history.length,
+        uniqueViewers: new Set(catalog.history.map(view => view.memberId)).size,
+        watchMinutes: totalMinutes,
+        ...Object.fromEntries(reportDays().map(date => [date, viewsByDate.get(date) || 0])),
+        ...Object.fromEntries(plans.map(plan => [plan, catalog.members.filter(member => member.plan === plan).length]))
+      };
+    }
+
+    function renderReports() {
+      const logged = loggedReportNumbers();
+      const report = { ...logged, ...catalog.reportOverrides };
+      byId('total-views').textContent = numbers.format(report.totalViews);
+      byId('unique-viewers').textContent = numbers.format(report.uniqueViewers);
+      byId('watch-time').textContent = numbers.format(report.watchMinutes) + ' min';
+      byId('paid-subs').textContent = numbers.format(report.Monthly + report.Annual);
+      barChart('view-chart', reportDays().map(date => [displayDate(date, shortDate), report[date]]));
+      barChart('plan-chart', plans.map(plan => [plan, report[plan]]));
+      byId('use-logged-numbers').hidden = !Object.keys(logged).some(key => Object.hasOwn(catalog.reportOverrides || {}, key));
+    }
+
+    function reportFields(title, fields, report) {
+      const group = element('fieldset');
+      const controls = element('div', null, 'report-fields');
+      for (const [key, name] of fields) {
+        const label = element('label', name);
+        const input = element('input');
+        input.name = key;
+        input.type = 'number';
+        input.min = 0;
+        input.max = 999999999;
+        input.required = true;
+        input.value = report[key];
+        label.append(input);
+        controls.append(label);
+      }
+      group.append(element('legend', title), controls);
+      return group;
     }
 
     function render() {
@@ -683,6 +734,33 @@
     });
 
     byId('cancel-edit').addEventListener('click', () => editor.close());
+    byId('edit-report').addEventListener('click', () => {
+      const report = { ...loggedReportNumbers(), ...catalog.reportOverrides };
+      byId('report-fields').replaceChildren(
+        reportFields('Totals', [
+          ['totalViews', 'Total views'],
+          ['uniqueViewers', 'Unique viewers'],
+          ['watchMinutes', 'Watch time (min)']
+        ], report),
+        reportFields('Daily views', reportDays().map(date => [date, displayDate(date, shortDate)]), report),
+        reportFields('Members by plan', plans.map(plan => [plan, plan]), report)
+      );
+      reportEditor.showModal();
+    });
+    byId('cancel-report').addEventListener('click', () => reportEditor.close());
+    reportForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const logged = loggedReportNumbers();
+      const values = [...new FormData(reportForm)].map(([key, value]) => [key, Number(value)]);
+      catalog.reportOverrides = Object.fromEntries(values.filter(([key, value]) => value !== logged[key]));
+      reportEditor.close();
+      saveCatalog('Report saved.');
+    });
+    byId('use-logged-numbers').addEventListener('click', () => {
+      delete catalog.reportOverrides;
+      saveCatalog('Report restored.');
+      byId('edit-report').focus();
+    });
     byId('reset-data').addEventListener('click', () => {
       if (!confirm('Reset the sample data? Your changes in this browser will be removed.')) return;
       catalog = sampleCatalog();
