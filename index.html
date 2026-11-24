@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Browse 20 films from IMDb and 20 top-rated anime from MyAnimeList.">
+  <title>Film &amp; Anime Catalog</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font: 100%/1.5 system-ui, sans-serif;
+      background: #10131a;
+      color: #f3f4f8;
+      --panel: #171b25;
+      --line: #303644;
+      --muted: #aeb7ca;
+      --accent: #c2b7ff;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { width: min(100% - 2rem, 68rem); margin: 0 auto; }
+    header { padding: clamp(2.5rem, 7vw, 5rem) 0 2rem; }
+    h1 { margin: 0; font-size: clamp(2.25rem, 6vw, 4rem); line-height: 1.06; letter-spacing: -.055em; }
+    header p { margin: .9rem 0 0; color: var(--muted); }
+    a { color: var(--accent); text-underline-offset: .2em; }
+    a:hover { color: #e5dfff; }
+    button, input, select { font: inherit; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .catalog {
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      background: var(--panel);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(8.5rem, auto) minmax(10rem, auto);
+      gap: 1rem;
+      padding: 1.25rem 1.5rem 0;
+    }
+
+    label { display: grid; gap: .35rem; font-size: .875rem; font-weight: 650; }
+    input, select {
+      width: 100%;
+      min-height: 2.75rem;
+      padding: .5rem .75rem;
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      background: #10131a;
+      color: inherit;
+      font-weight: 400;
+    }
+
+    input::placeholder { color: var(--muted); }
+    select {
+      appearance: none;
+      padding-right: 2rem;
+      background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position: calc(100% - 1rem) 50%, calc(100% - .7rem) 50%;
+      background-size: .3rem .3rem;
+      background-repeat: no-repeat;
+    }
+
+    #result-count { margin: .85rem 1.5rem; color: var(--muted); font-size: .875rem; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: #1f2430; }
+    th, td { padding: .8rem .75rem; text-align: left; }
+    thead th { font-size: .875rem; color: var(--muted); }
+    tbody tr { border-top: 1px solid var(--line); }
+    tbody tr:hover { background: #1a202c; }
+    th:first-child, td:first-child { padding-left: 1.5rem; }
+    th:last-child, td:last-child { padding-right: 1.5rem; text-align: right; }
+    tbody th { font-weight: 620; }
+    tbody a { color: inherit; text-decoration: none; }
+    tbody a:hover { text-decoration: underline; }
+    .year, .rank, .format { color: var(--muted); }
+    .rank, .year, .score { font-variant-numeric: tabular-nums; }
+    .score { color: var(--accent); font-weight: 700; white-space: nowrap; }
+    .category { display: block; color: var(--muted); font-size: .875rem; font-weight: 400; }
+    #empty { margin: 0; padding: 2rem 1.5rem; border-top: 1px solid var(--line); }
+    footer { padding: 1.15rem 0 2.5rem; color: var(--muted); font-size: .875rem; }
+
+    @media (max-width: 38rem) {
+      .controls { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding-inline: .85rem; gap: .75rem; }
+      .controls label:first-child { grid-column: 1 / -1; }
+      #result-count { margin-inline: .85rem; }
+      tr > :nth-child(3) { display: none; }
+      th, td { padding-inline: .4rem; }
+      th:first-child, td:first-child { padding-left: .85rem; }
+      th:last-child, td:last-child { padding-right: .85rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Film &amp; Anime Catalog</h1>
+      <p>20 films from IMDb and 20 top-rated anime from MyAnimeList.</p>
+    </header>
+
+    <section class="catalog" aria-label="Browse the catalog">
+      <div class="controls">
+        <label>Search
+          <input id="search" type="search" placeholder="Try Gintama or 1994" autocomplete="off">
+        </label>
+        <label>Category
+          <select id="category">
+            <option value="">All titles</option>
+            <option value="Film">Films</option>
+            <option value="Anime">Anime</option>
+          </select>
+        </label>
+        <label>Sort by
+          <select id="sort">
+            <option value="chart">Chart order</option>
+            <option value="score">Highest score</option>
+            <option value="year">Newest first</option>
+            <option value="title">Title A–Z</option>
+          </select>
+        </label>
+      </div>
+      <p id="result-count" role="status"></p>
+      <noscript><p>Enable JavaScript to browse the catalog.</p></noscript>
+      <table aria-label="Film and anime chart entries">
+        <thead>
+          <tr>
+            <th scope="col">Rank</th>
+            <th scope="col">Title</th>
+            <th scope="col">Format</th>
+            <th scope="col">Year</th>
+            <th scope="col">Score</th>
+          </tr>
+        </thead>
+        <tbody id="results"></tbody>
+      </table>
+      <p id="empty" hidden>No titles match your search.</p>
+    </section>
+
+    <footer>
+      Source charts: <a href="https://www.imdb.com/chart/top/">IMDb</a> and
+      <a href="https://myanimelist.net/topanime.php">MyAnimeList</a>.
+      Ranks and scores reflect the November 2026 snapshot.
+    </footer>
+  </main>
+
+  <template id="title-row">
+    <tr>
+      <td class="rank"></td>
+      <th scope="row"><a></a><span class="category"></span></th>
+      <td class="format"></td>
+      <td class="year"></td>
+      <td class="score"></td>
+    </tr>
+  </template>
+
+  <script type="application/json" id="catalog-data">
+[
+  {"category":"Film","rank":1,"title":"The Shawshank Redemption","alternateTitle":null,"year":1994,"format":"Feature film","score":9.3,"sourceId":"tt0111161"},
+  {"category":"Film","rank":2,"title":"The Godfather","alternateTitle":null,"year":1972,"format":"Feature film","score":9.2,"sourceId":"tt0068646"},
+  {"category":"Film","rank":3,"title":"The Dark Knight","alternateTitle":null,"year":2008,"format":"Feature film","score":9.1,"sourceId":"tt0468569"},
+  {"category":"Film","rank":4,"title":"The Godfather Part II","alternateTitle":null,"year":1974,"format":"Feature film","score":9,"sourceId":"tt0071562"},
+  {"category":"Film","rank":5,"title":"The Lord of the Rings: The Return of the King","alternateTitle":null,"year":2003,"format":"Feature film","score":9,"sourceId":"tt0167260"},
+  {"category":"Film","rank":6,"title":"12 Angry Men","alternateTitle":null,"year":1957,"format":"Feature film","score":9,"sourceId":"tt0050083"},
+  {"category":"Film","rank":7,"title":"Schindler's List","alternateTitle":null,"year":1993,"format":"Feature film","score":9,"sourceId":"tt0108052"},
+  {"category":"Film","rank":8,"title":"The Lord of the Rings: The Fellowship of the Ring","alternateTitle":null,"year":2001,"format":"Feature film","score":8.9,"sourceId":"tt0120737"},
+  {"category":"Film","rank":9,"title":"Pulp Fiction","alternateTitle":null,"year":1994,"format":"Feature film","score":8.8,"sourceId":"tt0110912"},
+  {"category":"Film","rank":10,"title":"The Lord of the Rings: The Two Towers","alternateTitle":null,"year":2002,"format":"Feature film","score":8.8,"sourceId":"tt0167261"},
+  {"category":"Film","rank":11,"title":"The Good, the Bad and the Ugly","alternateTitle":null,"year":1966,"format":"Feature film","score":8.8,"sourceId":"tt0060196"},
+  {"category":"Film","rank":12,"title":"Forrest Gump","alternateTitle":null,"year":1994,"format":"Feature film","score":8.8,"sourceId":"tt0109830"},
+  {"category":"Film","rank":13,"title":"Inception","alternateTitle":null,"year":2010,"format":"Feature film","score":8.8,"sourceId":"tt1375666"},
+  {"category":"Film","rank":14,"title":"Fight Club","alternateTitle":null,"year":1999,"format":"Feature film","score":8.8,"sourceId":"tt0137523"},
+  {"category":"Film","rank":15,"title":"Star Wars: Episode V - The Empire Strikes Back","alternateTitle":null,"year":1980,"format":"Feature film","score":8.7,"sourceId":"tt0080684"},
+  {"category":"Film","rank":16,"title":"The Matrix","alternateTitle":null,"year":1999,"format":"Feature film","score":8.7,"sourceId":"tt0133093"},
+  {"category":"Film","rank":17,"title":"Interstellar","alternateTitle":null,"year":2014,"format":"Feature film","score":8.7,"sourceId":"tt0816692"},
+  {"category":"Film","rank":18,"title":"GoodFellas","alternateTitle":null,"year":1990,"format":"Feature film","score":8.7,"sourceId":"tt0099685"},
+  {"category":"Film","rank":19,"title":"One Flew Over the Cuckoo's Nest","alternateTitle":null,"year":1975,"format":"Feature film","score":8.6,"sourceId":"tt0073486"},
+  {"category":"Film","rank":20,"title":"Seven","alternateTitle":"Se7en","year":1995,"format":"Feature film","score":8.6,"sourceId":"tt0114369"},
+  {"category":"Anime","rank":1,"title":"Frieren: Beyond Journey's End","alternateTitle":"Sousou no Frieren","year":2023,"format":"TV series","score":9.24,"sourceId":"52991"},
+  {"category":"Anime","rank":2,"title":"Fullmetal Alchemist: Brotherhood","alternateTitle":null,"year":2009,"format":"TV series","score":9.11,"sourceId":"5114"},
+  {"category":"Anime","rank":3,"title":"Steins;Gate","alternateTitle":null,"year":2011,"format":"TV series","score":9.07,"sourceId":"9253"},
+  {"category":"Anime","rank":4,"title":"Attack on Titan Season 3 Part 2","alternateTitle":"Shingeki no Kyojin Season 3 Part 2","year":2019,"format":"TV series","score":9.06,"sourceId":"38524"},
+  {"category":"Anime","rank":5,"title":"Chainsaw Man – The Movie: Reze Arc","alternateTitle":"Chainsaw Man Movie: Reze-hen","year":2025,"format":"Anime film","score":9.05,"sourceId":"57555"},
+  {"category":"Anime","rank":6,"title":"Gintama: The Final","alternateTitle":"Gintama: The Very Final","year":2021,"format":"Anime film","score":9.05,"sourceId":"39486"},
+  {"category":"Anime","rank":7,"title":"Gintama°","alternateTitle":null,"year":2015,"format":"TV series","score":9.05,"sourceId":"28977"},
+  {"category":"Anime","rank":8,"title":"Re:ZERO -Starting Life in Another World- Season 4","alternateTitle":"Re:Zero kara Hajimeru Isekai Seikatsu 4th Season","year":2026,"format":"TV series","score":9.05,"sourceId":"61316"},
+  {"category":"Anime","rank":9,"title":"Hunter x Hunter (2011)","alternateTitle":null,"year":2011,"format":"TV series","score":9.03,"sourceId":"11061"},
+  {"category":"Anime","rank":10,"title":"Steel Ball Run: JoJo's Bizarre Adventure","alternateTitle":"Steel Ball Run: JoJo no Kimyou na Bouken","year":2026,"format":"Web series","score":9.03,"sourceId":"61469"},
+  {"category":"Anime","rank":11,"title":"Legend of the Galactic Heroes","alternateTitle":"Ginga Eiyuu Densetsu","year":1988,"format":"OVA","score":9.02,"sourceId":"820"},
+  {"category":"Anime","rank":12,"title":"Gintama'","alternateTitle":null,"year":2011,"format":"TV series","score":9.02,"sourceId":"9969"},
+  {"category":"Anime","rank":13,"title":"Gintama': Enchousen","alternateTitle":null,"year":2012,"format":"TV series","score":9.02,"sourceId":"15417"},
+  {"category":"Anime","rank":14,"title":"One Piece Fan Letter","alternateTitle":null,"year":2024,"format":"TV special","score":8.99,"sourceId":"60022"},
+  {"category":"Anime","rank":15,"title":"Gintama.","alternateTitle":null,"year":2017,"format":"TV series","score":8.98,"sourceId":"34096"},
+  {"category":"Anime","rank":16,"title":"Bleach: Thousand-Year Blood War","alternateTitle":"Bleach: Sennen Kessen-hen","year":2022,"format":"TV series","score":8.97,"sourceId":"41467"},
+  {"category":"Anime","rank":17,"title":"Kaguya-sama: Love Is War – Ultra Romantic","alternateTitle":"Kaguya-sama wa Kokurasetai: Ultra Romantic","year":2022,"format":"TV series","score":8.94,"sourceId":"43608"},
+  {"category":"Anime","rank":18,"title":"Clannad: After Story","alternateTitle":null,"year":2008,"format":"TV series","score":8.93,"sourceId":"4181"},
+  {"category":"Anime","rank":19,"title":"Gintama","alternateTitle":null,"year":2006,"format":"TV series","score":8.93,"sourceId":"918"},
+  {"category":"Anime","rank":20,"title":"A Silent Voice","alternateTitle":"Koe no Katachi","year":2016,"format":"Anime film","score":8.93,"sourceId":"28851"}
+]
+</script>
+  <script>
+    const titles = JSON.parse(document.getElementById('catalog-data').textContent);
+    const search = document.getElementById('search');
+    const category = document.getElementById('category');
+    const sort = document.getElementById('sort');
+    const results = document.getElementById('results');
+    const resultCount = document.getElementById('result-count');
+    const empty = document.getElementById('empty');
+    const template = document.getElementById('title-row');
+    const sortable = {
+      score: (first, second) => second.score - first.score,
+      year: (first, second) => second.year - first.year,
+      title: (first, second) => first.title.localeCompare(second.title)
+    };
+
+    function normalize(value) {
+      return value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+    }
+
+    function renderCatalog() {
+      const terms = normalize(search.value).trim().split(/\s+/);
+      const visibleTitles = titles.filter(entry => {
+        const searchable = normalize([entry.title, entry.alternateTitle, entry.year].join(' '));
+        return (!category.value || entry.category === category.value) &&
+          terms.every(term => searchable.includes(term));
+      });
+
+      if (sort.value !== 'chart') visibleTitles.sort(sortable[sort.value]);
+
+      const rows = visibleTitles.map(entry => {
+        const row = template.content.firstElementChild.cloneNode(true);
+        const film = entry.category === 'Film';
+        const link = row.querySelector('a');
+        link.textContent = entry.title;
+        link.href = film
+          ? 'https://www.imdb.com/title/' + entry.sourceId + '/'
+          : 'https://myanimelist.net/anime/' + entry.sourceId;
+        row.querySelector('.category').textContent = film ? 'Film · IMDb' : 'Anime · MyAnimeList';
+        row.querySelector('.rank').textContent = entry.rank;
+        row.querySelector('.format').textContent = entry.format;
+        row.querySelector('.year').textContent = entry.year;
+        row.querySelector('.score').textContent = entry.score.toFixed(film ? 1 : 2);
+        return row;
+      });
+
+      results.replaceChildren(...rows);
+      resultCount.textContent = visibleTitles.length + (visibleTitles.length === 1 ? ' title' : ' titles');
+      empty.hidden = visibleTitles.length > 0;
+    }
+
+    search.addEventListener('input', renderCatalog);
+    category.addEventListener('change', renderCatalog);
+    sort.addEventListener('change', renderCatalog);
+    renderCatalog();
+  </script>
+</body>
+</html>
